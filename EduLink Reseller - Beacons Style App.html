@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ms" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduLink Reseller Hub</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .dark .glass-card { background: rgba(30, 41, 59, 0.95); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-slate-800 dark:text-slate-100 min-h-full flex flex-col items-center justify-start p-3 sm:p-6">
+
+    <div class="w-full max-w-md mx-auto bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden border border-slate-100 dark:border-slate-800 flex flex-col relative pb-16">
+        
+        <!-- Top Control Bar (Edit / Preview Toggle) -->
+        <div class="bg-slate-900 text-white px-4 py-3 flex justify-between items-center text-xs font-medium">
+            <span class="flex items-center gap-1.5"><i class="fa-solid fa-graduation-cap text-indigo-400"></i> EduReseller Hub</span>
+            <div class="flex gap-2">
+                <button onclick="toggleEditMode()" id="modeBtn" class="bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded-full transition shadow-sm flex items-center gap-1">
+                    <i class="fa-solid fa-pen-to-square"></i> <span id="modeText">Mod Edit</span>
+                </button>
+                <button onclick="openSettingsModal()" class="bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-full transition">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="relative bg-gradient-to-r from-indigo-600 to-violet-600 p-6 text-center text-white">
+            <div class="absolute top-3 right-3 edit-only hidden">
+                <button onclick="editProfilePic()" class="bg-black/40 hover:bg-black/60 p-2 rounded-full text-xs"><i class="fa-solid fa-camera"></i></button>
+            </div>
+            <div class="w-24 h-24 mx-auto rounded-full border-4 border-white/80 shadow-lg overflow-hidden bg-white mb-3">
+                <img id="profileImg" src="https://placehold.co/200x200/4f46e5/ffffff?text=Cikgu" alt="Profile" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/4f46e5/ffffff?text=Cikgu'">
+            </div>
+            <h1 id="profileName" class="text-xl font-bold tracking-tight">Cikgu Aiman | Modul & E-Book Pendidikan</h1>
+            <p id="profileBio" class="text-xs text-indigo-100 mt-1 max-w-xs mx-auto">Platform sehenti bahan bantu mengajar, e-book interaktif & nota panduan pelajar sekolah rendah & menengah.</p>
+            
+            <!-- Social / Quick Links Bar -->
+            <div id="socialBar" class="flex justify-center gap-3 mt-4 text-sm">
+                <a href="https://wa.me/" target="_blank" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="https://t.me/" target="_blank" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition"><i class="fa-brands fa-telegram"></i></a>
+                <a href="https://tiktok.com" target="_blank" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="https://instagram.com" target="_blank" class="w-9 h-9 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition"><i class="fa-brands fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <div class="p-4 space-y-4">
+            <!-- Featured Banner/Image Block -->
+            <div class="relative rounded-2xl overflow-hidden shadow-md group border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800">
+                <img id="featuredImage" src="https://placehold.co/600x250/e0e7ff/4f46e5?text=Promo+Buku+Digital+Terbaru" alt="Banner" class="w-full h-36 object-cover" onerror="this.src='https://placehold.co/600x250/e0e7ff/4f46e5?text=Banner'">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+                    <span id="featuredImageCaption" class="text-white text-xs font-medium">✨ Dapatkan Pakej Lengkap Nota Percubaan SPM 2026 Hari Ini!</span>
+                </div>
+                <div class="absolute top-2 right-2 edit-only hidden">
+                    <button onclick="editFeaturedImage()" class="bg-black/60 text-white p-1.5 rounded-lg text-xs"><i class="fa-solid fa-pen"></i></button>
+                </div>
+            </div>
+
+            <!-- Featured Video Block -->
+            <div class="rounded-2xl overflow-hidden shadow-md border border-slate-100 dark:border-slate-800 bg-slate-900">
+                <div class="p-2 bg-slate-800 text-xs font-semibold text-slate-300 flex justify-between items-center">
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-play-circle text-rose-500"></i> Video Preview Produk</span>
+                    <button onclick="editVideoUrl()" class="edit-only hidden text-indigo-400 hover:text-indigo-300 text-[11px]"><i class="fa-solid fa-pen"></i> Tukar URL</button>
+                </div>
+                <div class="aspect-video w-full bg-black relative flex items-center justify-center">
+                    <iframe id="featuredVideo" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Video Produk" class="w-full h-full" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-4 pb-4">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Kategori & Folder Produk</h2>
+                <button onclick="addNewFolder()" class="edit-only hidden text-xs bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 px-2.5 py-1 rounded-lg font-medium border border-indigo-200 dark:border-indigo-800"><i class="fa-solid fa-plus"></i> Tambah Folder</button>
+            </div>
+
+            <div id="foldersContainer" class="space-y-3">
+                <!-- Folders injected dynamically via JS -->
+            </div>
+        </div>
+
+        <div class="px-4 pb-6">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Pautan Pantas & Rujukan</h2>
+                <button onclick="addNewLink()" class="edit-only hidden text-xs bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 px-2.5 py-1 rounded-lg font-medium border border-emerald-200 dark:border-emerald-800"><i class="fa-solid fa-plus"></i> Tambah Pautan</button>
+            </div>
+            <div id="linksContainer" class="space-y-2.5">
+                <!-- Links injected dynamically via JS -->
+            </div>
+        </div>
+
+        <!-- Footer watermark -->
+        <div class="mt-auto py-4 text-center text-[11px] text-slate-400 border-t border-slate-100 dark:border-slate-800">
+            Dikuasakan oleh <span class="font-semibold text-indigo-600 dark:text-indigo-400">EduReseller Beacons</span> &copy; 2026
+        </div>
+    </div>
+
+    <!-- Item Edit Modal -->
+    <div id="itemModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-sm rounded-2xl p-5 shadow-2xl border border-slate-100 dark:border-slate-700">
+            <h3 id="modalTitle" class="text-base font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-folder-open text-indigo-600"></i> Edit Kandungan Folder</h3>
+            <input type="hidden" id="modalFolderId">
+            <input type="hidden" id="modalItemIndex">
+            
+            <div class="space-y-3 text-sm">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Nama Produk / Bahan</label>
+                    <input type="text" id="itemNameInput" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Penerangan Ringkas</label>
+                    <textarea id="itemDescInput" rows="2" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Harga (Cth: RM15.00)</label>
+                    <input type="text" id="itemPriceInput" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">URL Pautan Beli / Muat Turun</label>
+                    <input type="text" id="itemUrlInput" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
+
+            <div class="flex gap-2 mt-5">
+                <button onclick="closeModal()" class="flex-1 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 py-2 rounded-xl text-xs font-semibold transition">Batal</button>
+                <button onclick="saveItemChanges()" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-2 rounded-xl text-xs font-semibold transition">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs px-4 py-2.5 rounded-full shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i> <span id="toastMsg">Berjaya dikemas kini!</span>
+    </div>
+
+    <script>
+        let isEditMode = false;
+
+        // Default Data representing 7 distinct educational product folders & general links
+        let appData = {
+            profile: {
+                name: "Cikgu Aiman | Modul & E-Book Pendidikan",
+                bio: "Platform sehenti bahan bantu mengajar, e-book interaktif & nota panduan pelajar sekolah rendah & menengah.",
+                img: "https://placehold.co/200x200/4f46e5/ffffff?text=Cikgu",
+                featuredImg: "https://placehold.co/600x250/e0e7ff/4f46e5?text=Promo+Buku+Digital+Terbaru",
+                featuredCaption: "✨ Dapatkan Pakej Lengkap Nota Percubaan SPM 2026 Hari Ini!",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+            },
+            folders: [
+                {
+                    id: "folder1",
+                    title: "Nota & Modul Prasekolah (3-6 Tahun)",
+                    icon: "fa-child-reaching",
+                    color: "bg-amber-500",
+                    items: [
+                        { name: "Set Latihan Huruf & Nombor Interaktif", desc: "PDF 80 muka surat bergambar penuh warna.", price: "RM 10.00", url: "https://wasap.my/" },
+                        { name: "Kad Imbas Jom Membaca Suku Kata", desc: "Sesuai untuk anak-anak cepat kenal huruf.", price: "RM 15.00", url: "https://wasap.my/" }
+                    ]
+                },
+                {
+                    id: "folder2",
+                    title: "Bahan Bantu Mengajar (BBM) Sekolah Rendah",
+                    icon: "fa-book-open-reader",
+                    color: "bg-emerald-500",
+                    items: [
+                        { name: "Modul Bijak Sifir & Matematik Tahun 1-3", desc: "Teknik pantas hafal sifir tanpa tekanan.", price: "RM 12.00", url: "https://wasap.my/" },
+                        { name: "Nota Nota Padat Sains Tahun 4, 5 & 6", desc: "Format peta minda terkini KSSR Semakan.", price: "RM 18.00", url: "https://wasap.my/" }
+                    ]
+                },
+                {
+                    id: "folder3",
+                    title: "Koleksi Soalan Percubaan SPM & PT3",
+                    icon: "fa-graduation-cap",
+                    color: "bg-indigo-500",
+                    items: [
+                        { name: "Trial SPM Sejarah Kertas 1 & 2 (Negeri Terpilih)", desc: "Lengkap skema jawapan rasmi.", price: "RM 25.00", url: "https://wasap.my/" },
+                        { name: "Masteri Matematik Tambahan Tingkatan 4 & 5", desc: "Formula ringkas & latih tubi pilihan.", price: "RM 22.00", url: "https://wasap.my/" }
+                    ]
+                },
+                {
+                    id: "folder4",
+                    title: "E-Book & Panduan Kerjaya Guru",
+                    icon: "fa-chalkboard-user",
+                    color: "bg-rose-500",
+                    items: [
+                        { name: "Panduan Lengkap Penulisan RPH 2026", desc: "Contoh Rancangan Pengajaran Harian lengkap TS25.", price: "RM 30.00", url: "https://wasap.my/" },
+                        { name: "Teknik Gamification Dalam Kelas Pintar", desc: "Cara guna quizizz & kahoot efektif.", price: "RM 20.00", url: "https://wasap.my/" }
+                    ]
+                },
+                {
+                    id: "folder5",
+                    title: "Kit Kelas Interaktif & Digital Planner",
+                    icon: "fa-laptop-code",
+                    color: "bg-sky-500",
+                    items: [
+                        { name: "Digital Teacher Planner 2026 (GoodNotes)", desc: "Buku rekod mengajar digital serba guna.", price: "RM 35.00", url: "https://wasap.my/" },
+                        { name: "Template Powerpoint Mengajar Animasi", desc: "Lebih 50+ tema subjek menarik.", price: "RM 19.00", url: "https://wasap.my/" }
+                    ]
+                },
+                {
+                    id: "folder6",
+                    title: "Kelas Tuition Online & Video Tutorial",
+                    icon: "fa-video",
+                    color: "bg-purple-500",
+                    items: [
+                        { name: "Rakaman Kelas Intensif Fizik SPM", desc: "Akses ulangkaji video 10 jam berfokus.", price: "RM 50.00", url: "https://wasap.my/" },
+                        { name: "Kelas Asas Bahasa Inggeris Komunikasi", desc: "Modul audio & video percuma.", price: "RM 30.00", url: "https://wasap.my/" }
+                    ]
+                },
+                {
+                    id: "folder7",
+                    title: "Freebies & Bahan Percuma Reseller",
+                    icon: "fa-gift",
+                    color: "bg-orange-500",
+                    items: [
+                        { name: "Jadual Waktu Belajar Kreatif (PDF)", desc: "Boleh cetak percuma untuk pelajar.", price: "PERCUMA", url: "https://wasap.my/" },
+                        { name: "Checklist Persiapan Masuk Sekolah", desc: "Panduan ibu bapa awal sesi persekolahan.", price: "PERCUMA", url: "https://wasap.my/" }
+                    ]
+                }
+            ],
+            links: [
+                { title: "Sertai Saluran Telegram Info Cikgu Aiman", url: "https://t.me/", icon: "fa-telegram" },
+                { title: "Dapatkan Katalog Penuh WhatsApp Catalog", url: "https://wa.me/", icon: "fa-whatsapp" },
+                { title: "Layari Website Rasmi Bahan Didik", url: "https://example.com", icon: "fa-globe" }
+            ]
+        };
+
+        // Load saved state from localStorage if available
+        function loadAppData() {
+            const saved = localStorage.getItem('edureseller_data');
+            if (saved) {
+                try { appData = JSON.parse(saved); } catch(e) {}
+            }
+            renderApp();
+        }
+
+        function saveAppData() {
+            localStorage.setItem('edureseller_data', JSON.stringify(appData));
+            showToast("Perubahan berjaya disimpan!");
+        }
+
+        function renderApp() {
+            // Profile details
+            document.getElementById('profileName').innerText = appData.profile.name;
+            document.getElementById('profileBio').innerText = appData.profile.bio;
+            document.getElementById('profileImg').src = appData.profile.img;
+            document.getElementById('featuredImage').src = appData.profile.featuredImg;
+            document.getElementById('featuredImageCaption').innerText = appData.profile.featuredCaption;
+            document.getElementById('featuredVideo').src = appData.profile.videoUrl;
+
+            // Render Folders
+            const container = document.getElementById('foldersContainer');
+            container.innerHTML = '';
+
+            appData.folders.forEach((folder, fIdx) => {
+                let folderEl = document.createElement('div');
+                folderEl.className = "bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/80 overflow-hidden";
+                
+                let itemsHtml = '';
+                folder.items.forEach((item, iIdx) => {
+                    itemsHtml += `
+                        <div class="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-100 dark:border-slate-800 flex justify-between items-center gap-2 group">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 truncate">${item.name}</h4>
+                                    <span class="text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded">${item.price}</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5">${item.desc}</p>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <a href="${item.url}" target="_blank" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs px-2.5 py-1.5 rounded-lg font-medium shadow-sm transition shrink-0"><i class="fa-solid fa-cart-shopping"></i> Beli</a>
+                                <button onclick="openEditItemModal('${folder.id}', ${iIdx})" class="edit-only hidden text-slate-400 hover:text-indigo-600 p-1"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button onclick="deleteItem('${folder.id}', ${iIdx})" class="edit-only hidden text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                folderEl.innerHTML = `
+                    <div class="p-3.5 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700/50">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-xl ${folder.color} text-white flex items-center justify-center text-sm shadow-sm"><i class="fa-solid ${folder.icon}"></i></div>
+                            <h3 class="text-xs font-bold text-slate-700 dark:text-slate-200">${folder.title}</h3>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="addItemToFolder('${folder.id}')" class="edit-only hidden text-xs bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded-lg"><i class="fa-solid fa-plus"></i> Produk</button>
+                            <button onclick="toggleFolderContent('${folder.id}')" class="text-slate-400 hover:text-slate-600 text-xs px-1.5 py-1"><i id="icon-${folder.id}" class="fa-solid fa-chevron-down transition-transform"></i></button>
+                        </div>
+                    </div>
+                    <div id="content-${folder.id}" class="p-3 space-y-2.5 hidden">
+                        ${itemsHtml || '<p class="text-xs text-slate-400 text-center py-2">Tiada produk dalam folder ini.</p>'}
+                    </div>
+                `;
+                container.appendChild(folderEl);
+            });
+
+            // Render Links
+            const linksContainer = document.getElementById('linksContainer');
+            linksContainer.innerHTML = '';
+            appData.links.forEach((link, lIdx) => {
+                let linkEl = document.createElement('div');
+                linkEl.className = "flex items-center justify-between p-3 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:border-indigo-500 transition group";
+                linkEl.innerHTML = `
+                    <a href="${link.url}" target="_blank" class="flex items-center gap-3 flex-1 min-w-0">
+                        <div class="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0"><i class="fa-brands ${link.icon || 'fa-link'}"></i></div>
+                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 truncate">${link.title}</span>
+                    </a>
+                    <div class="flex items-center gap-1">
+                        <button onclick="deleteLink(${lIdx})" class="edit-only hidden text-slate-400 hover:text-rose-500 p-1"><i class="fa-solid fa-trash"></i></button>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 ml-2"></i>
+                    </div>
+                `;
+                linksContainer.appendChild(linkEl);
+            });
+
+            // Apply Edit Mode Visibility
+            document.querySelectorAll('.edit-only').forEach(el => {
+                if (isEditMode) el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        function toggleFolderContent(folderId) {
+            const content = document.getElementById(`content-${folderId}`);
+            const icon = document.getElementById(`icon-${folderId}`);
+            content.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const btnText = document.getElementById('modeText');
+            const modeBtn = document.getElementById('modeBtn');
+            if (isEditMode) {
+                btnText.innerText = "Mod Live Preview";
+                modeBtn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
+                modeBtn.classList.add('bg-emerald-600', 'hover:bg-emerald-500');
+                showToast("Mod Edit Diaktifkan. Klik butang edit pada elemen.");
+            } else {
+                btnText.innerText = "Mod Edit";
+                modeBtn.classList.remove('bg-emerald-600', 'hover:bg-emerald-500');
+                modeBtn.classList.add('bg-indigo-600', 'hover:bg-indigo-500');
+                saveAppData();
+            }
+            renderApp();
+        }
+
+        // Profile & Media Customization Prompts
+        function editProfilePic() {
+            let newUrl = prompt("Masukkan URL gambar profil baru:", appData.profile.img);
+            if (newUrl) { appData.profile.img = newUrl; renderApp(); }
+        }
+
+        function editFeaturedImage() {
+            let newUrl = prompt("Masukkan URL banner/gambar promosi baru:", appData.profile.featuredImg);
+            let newCap = prompt("Masukkan keterangan banner:", appData.profile.featuredCaption);
+            if (newUrl) appData.profile.featuredImg = newUrl;
+            if (newCap) appData.profile.featuredCaption = newCap;
+            renderApp();
+        }
+
+        function editVideoUrl() {
+            let newUrl = prompt("Masukkan URL Embed YouTube (cth: https://www.youtube.com/embed/VIDEO_ID):", appData.profile.videoUrl);
+            if (newUrl) { appData.profile.videoUrl = newUrl; renderApp(); }
+        }
+
+        function openSettingsModal() {
+            let newName = prompt("Kemaskini Nama Reseller / Tajuk Hub:", appData.profile.name);
+            let newBio = prompt("Kemaskini Bio Ringkas:", appData.profile.bio);
+            if (newName) appData.profile.name = newName;
+            if (newBio) appData.profile.bio = newBio;
+            renderApp();
+            saveAppData();
+        }
+
+        // Item Modal Operations
+        function openEditItemModal(folderId, itemIndex) {
+            document.getElementById('modalFolderId').value = folderId;
+            document.getElementById('modalItemIndex').value = itemIndex;
+            
+            const folder = appData.folders.find(f => f.id === folderId);
+            const item = folder.items[itemIndex];
+
+            document.getElementById('itemNameInput').value = item.name;
+            document.getElementById('itemDescInput').value = item.desc;
+            document.getElementById('itemPriceInput').value = item.price;
+            document.getElementById('itemUrlInput').value = item.url;
+
+            document.getElementById('itemModal').classList.remove('hidden');
+        }
+
+        function addItemToFolder(folderId) {
+            document.getElementById('modalFolderId').value = folderId;
+            document.getElementById('modalItemIndex').value = "-1";
+
+            document.getElementById('itemNameInput').value = "";
+            document.getElementById('itemDescInput').value = "";
+            document.getElementById('itemPriceInput').value = "RM 10.00";
+            document.getElementById('itemUrlInput').value = "https://wasap.my/";
+
+            document.getElementById('itemModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('itemModal').classList.add('hidden');
+        }
+
+        function saveItemChanges() {
+            const folderId = document.getElementById('modalFolderId').value;
+            const itemIndex = parseInt(document.getElementById('modalItemIndex').value);
+            
+            const newItem = {
+                name: document.getElementById('itemNameInput').value || 'Produk Baru',
+                desc: document.getElementById('itemDescInput').value || 'Penerangan produk',
+                price: document.getElementById('itemPriceInput').value || 'RM 0.00',
+                url: document.getElementById('itemUrlInput').value || '#'
+            };
+
+            const folder = appData.folders.find(f => f.id === folderId);
+            if (itemIndex === -1) {
+                folder.items.push(newItem);
+            } else {
+                folder.items[itemIndex] = newItem;
+            }
+
+            closeModal();
+            renderApp();
+            saveAppData();
+        }
+
+        function deleteItem(folderId, itemIndex) {
+            if (confirm("Adakah anda pasti ingin memadam produk ini?")) {
+                const folder = appData.folders.find(f => f.id === folderId);
+                folder.items.splice(itemIndex, 1);
+                renderApp();
+                saveAppData();
+            }
+        }
+
+        function addNewFolder() {
+            let title = prompt("Masukkan nama folder kategori baru:");
+            if (title) {
+                let newId = 'folder_' + Date.now();
+                appData.folders.push({
+                    id: newId,
+                    title: title,
+                    icon: "fa-folder",
+                    color: "bg-indigo-600",
+                    items: []
+                });
+                renderApp();
+                saveAppData();
+            }
+        }
+
+        function addNewLink() {
+            let title = prompt("Masukkan tajuk pautan pantas:");
+            let url = prompt("Masukkan URL pautan (cth: https://...):", "https://");
+            if (title && url) {
+                appData.links.push({ title, url, icon: "fa-link" });
+                renderApp();
+                saveAppData();
+            }
+        }
+
+        function deleteLink(lIdx) {
+            if (confirm("Padam pautan ini?")) {
+                appData.links.splice(lIdx, 1);
+                renderApp();
+                saveAppData();
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2500);
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            loadAppData();
+        };
+    </script>
+</body>
+</html>
